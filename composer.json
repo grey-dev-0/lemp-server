@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
+    "name": "grey-dev-0/lemp-server",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "LEMP server manager.",
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
