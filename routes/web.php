@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home', ['title' => 'Home'])->name('home');
 Route::view('projects', 'projects', ['title' => 'Projects'])->name('projects');
+Route::post('projects', [Controller::class, 'postProjects'])->name('projects.ajax');
 Route::view('domains', 'domains', ['title' => 'Domains'])->name('domains');
+Route::post('domains', [Controller::class, 'postDomains'])->name('domains.ajax');
