@@ -8,10 +8,9 @@ let imports = [
 ];
 
 Promise.all(imports).then(bundles => {
-    let components = {};
+    let components = {Card: defineAsyncComponent(() => import('../vue/card.vue'))};
     for(let i in bundles)
         components = Object.assign(components, bundles[i].default);
-    components.Card = defineAsyncComponent(() => import('../vue/card.vue'));
     let app = createApp({
         name: 'LempManager',
         components,

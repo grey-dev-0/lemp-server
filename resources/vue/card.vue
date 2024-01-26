@@ -7,7 +7,12 @@
             </div>
         </div>
         <h4 v-else :class="headerClass + (whiteTitle? ' text-white' : '')">{{title}}</h4>
-        <slot></slot>
+        <div class="card-body" v-if="!noPadding">
+            <slot></slot>
+        </div>
+        <template v-else>
+            <slot></slot>
+        </template>
         <div v-if="!!$slots.footer" class="card-footer">
             <slot name="footer"></slot>
         </div>
@@ -21,6 +26,10 @@ export default {
         title: {
             type: String,
             required: true
+        },
+        noPadding: {
+            type: Boolean,
+            default: false
         },
         color: String
     },

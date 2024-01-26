@@ -11,7 +11,8 @@ class Controller extends BaseController{
     use AuthorizesRequests, ValidatesRequests;
 
     public function postProjects(){
-        return \DataTables::of(Project::query())->make();
+        return \DataTables::of(Project::query())
+            ->addColumn('actions', fn($project) => view('actions.projects', compact('project'))->render())->make();
     }
 
     public function postDomains(){
