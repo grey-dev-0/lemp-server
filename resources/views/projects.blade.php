@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col">
             <card title="Projects" color="blue-grey-2">
-                <vue-datatable id="projects" ref="projects" url="{{route('projects.ajax')}}">
+                <vue-datatable datatable-id="projects" ref="projects" url="{{route('projects.ajax')}}">
                     <dt-column name="path" data="path" class-name="nowrap">Project</dt-column>
                     <dt-column name="type" data="type" :render="renderType">Type</dt-column>
                     <dt-column name="database" data="database">Database</dt-column>

@@ -20,12 +20,15 @@
 </template>
 
 <script>
-let $ = window.$;
-let _ = window._;
+import {debounce as _debounce} from 'lodash'
+let $;
 let select2Options = {};
 
 export default {
     name: 'DtFilter',
+    created(){
+        $ = this.$root.jQuery();
+    },
     mounted: function(){
         if(this.default)
             this.$parent.defaults[this.name] = this.input = this.default;
@@ -110,7 +113,7 @@ export default {
         }
     },
     methods: {
-        debouncedFilter: _.debounce(function(field, value){
+        debouncedFilter: _debounce(function(field, value){
             this.filter(field, value);
         }, 200),
         filter: function(field, value){

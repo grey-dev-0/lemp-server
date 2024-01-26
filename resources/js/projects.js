@@ -18,7 +18,15 @@ Promise.all(imports).then(bundles => {
         methods: {
             jQuery(){
                 return jQuery;
-            }
+            },
+            renderType:(type) => type
+        },
+        created(){
+            jQuery.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                }
+            })
         }
     });
 

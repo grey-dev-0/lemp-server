@@ -13,7 +13,8 @@
 </template>
 
 <script>
-import DataTables from "datatables.net-bs";
+import 'datatables.net-bs4';
+import 'datatables.net-bs4/css/dataTables.bootstrap4.css';
 let $;
 
 export default {
@@ -38,7 +39,7 @@ export default {
         },
         dom: {
             type: String,
-            default: 'lfrtip'
+            default: '<"d-flex justify-content-between align-items-center mx-0 row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>t<"d-flex justify-content-between mx-0 row mt-2 mb-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>'
         },
         ajaxComplete: {
             default: null
@@ -86,9 +87,8 @@ export default {
                 this.$root.emitter.emit('initialized', {ref: this.getRef()});
         }
     },
-    mounted(){
+    created(){
         $ = this.$root.jQuery();
-        DataTables(window, $);
     }
 };
 </script>
