@@ -8,9 +8,22 @@ import('../vue/navbar').then(bundle => {
     let app = createApp({
         name: 'LempManager',
         components,
+        data(){
+            return {
+                domains: [
+                    {name: '', https: true}
+                ]
+            };
+        },
         methods: {
             jQuery(){
                 return jQuery;
+            },
+            add(){
+                this.domains.push({name: '', https: true});
+            },
+            remove(i){
+                this.domains.splice(i, 1);
             }
         }
     });

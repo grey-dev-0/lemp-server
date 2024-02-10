@@ -12,8 +12,9 @@ return new class extends Migration{
         Schema::create('domains', function(Blueprint $table){
             $table->increments('id');
             $table->unsignedInteger('project_id');
-            $table->string('name');
             $table->foreign('project_id')->references('id')->on('projects')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('name');
+            $table->boolean('https');
             $table->timestamps();
         });
     }
