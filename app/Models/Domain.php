@@ -11,6 +11,11 @@ class Domain extends Model{
     /**
      * @inheritdoc
      */
+    protected $casts = ['provisioned_at' => 'datetime:Y-m-d h:i:s A'];
+
+    /**
+     * @inheritdoc
+     */
     protected $guarded = ['id'];
 
     public function project(){

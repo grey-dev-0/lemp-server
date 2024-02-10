@@ -14,6 +14,7 @@ return new class extends Migration{
             $table->string('path');
             $table->unsignedTinyInteger('type');
             $table->string('database')->nullable();
+            $table->timestamp('provisioned_at')->nullable();
             $table->timestamps();
         });
     }

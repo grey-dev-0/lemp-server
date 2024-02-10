@@ -27,9 +27,27 @@ class Project extends Model{
     /**
      * @inheritdoc
      */
+    protected $casts = [
+        'provisioned_at' => 'datetime:d/m/Y h:i:s A',
+        'created_at'     => 'datetime:d/m/Y h:i:s A',
+        'updated_at'     => 'datetime:d/m/Y h:i:s A'
+    ];
+
+    /**
+     * @inheritdoc
+     */
     protected $guarded = ['id'];
 
     public function domains(){
         return $this->hasMany(Domain::class);
+    }
+
+    public function setPathAttribute($path){
+        $this->attributes['path'] = str_replace("\\", '/', $path);
+    }
+
+    public function getNameAttribute(){
+        $path = explode('/', $this->path);
+        return end($path);
     }
 }

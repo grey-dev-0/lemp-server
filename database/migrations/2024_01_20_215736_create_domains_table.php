@@ -15,6 +15,7 @@ return new class extends Migration{
             $table->foreign('project_id')->references('id')->on('projects')->onUpdate('cascade')->onDelete('cascade');
             $table->string('name');
             $table->boolean('https');
+            $table->timestamp('provisioned_at')->nullable();
             $table->timestamps();
         });
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProvisionProject;
 use App\Models\Project;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -15,7 +16,14 @@ class Controller extends BaseController{
             ->addColumn('actions', fn($project) => view('actions.projects', compact('project'))->render())->make();
     }
 
+    public function postProject(){
+        $project = Project::create(request()->only(['path', 'type', 'database']));
+        $project->domains()->createMany(request('domains'));
+        dispatch(new ProvisionProject($project));
+        return redirect()->route('projects')->with(['success' => true]);
+    }
+
     public function postDomains(){
-        // TODO
+        # TODO: Domains listing.
     }
 }
