@@ -21,7 +21,19 @@ class ProvisionDomain implements ShouldQueue{
      * Execute the job.
      */
     public function handle(): void{
-        # TODO: Provisioning domain.
+        $nginxFile = storage_path("app/{$this->domain->name}.conf");
+        $nginxConfig = view('stubs.nginx', [
+            'serverName' => $this->domain->name,
+            'type' => (int)$this->domain->type,
+            'docRoot' => $this->domain->project->path,
+            'tls' => (boolean)$this->domain->https
+        ])->render();
+        file_put_contents($nginxFile, $nginxConfig);
+        $provision = `docker cp $nginxFile lemp-nginx-1:/etc/nginx/vhosts/ && rm -f $nginxFile`;
+        if($this->domain->https)
+            $provision .= `mkcert {$this->domain->name} && docker cp {$this->domain->name}.pem lemp-nginx-1:/etc/nginx/ssl/ && docker cp {$this->domain->name}-key.pem lemp-nginx-1:/etc/nginx/ssl/ && rm -f {$this->domain->name}*.pem`;
+        $provision .= `docker exec lemp-nginx-1 nginx -s reload`;
+        \Log::info("Provisioning domain {$this->domain->name}\n$provision");
         $this->domain->update(['provisioned_at' => now()]);
     }
 }
