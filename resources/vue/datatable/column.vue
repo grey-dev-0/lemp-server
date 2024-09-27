@@ -8,7 +8,7 @@
 </template>
 
 <script>
-let $;
+import {jQuery as $} from '../../js/common';
 
 export default {
     name: 'DtColumn',
@@ -50,13 +50,10 @@ export default {
             return actions.join(' ');
         }
     },
-    created(){
-        $ = this.$root.jQuery();
-    },
     mounted(){
-        var column = {};
-        var props = ['data', 'render', 'name', 'searchable', 'orderable', 'visible', 'defaultContent', 'className', 'width'];
-        for(var i in props)
+        let column = {},
+            props = ['data', 'render', 'name', 'searchable', 'orderable', 'visible', 'defaultContent', 'className', 'width'];
+        for(let i in props)
             if(this.$props[props[i]] !== undefined)
                 column[props[i]] = this.$props[props[i]];
         if(!!this.$slots.actions)

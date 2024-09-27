@@ -1,11 +1,12 @@
-import DtColumn from './column.vue';
+import DtColumn from "./column.vue";
 import VueDatatable from "./datatable.vue";
-import VueDatafilter from "./datafilter.vue";
-import DtFilter from "./filter-input.vue";
+import {defineAsyncComponent} from "vue";
 
-export default {
-    DtColumn,
-    VueDatatable,
-    VueDatafilter,
-    DtFilter
+function load(app){
+    app.component('DtColumn', DtColumn);
+    app.component('VueDatatable', VueDatatable);
+    app.component('VueDatafilter', defineAsyncComponent(() => import('./datafilter.vue')));
+    app.component('DtFilter', defineAsyncComponent(() => import('./filter-input.vue')));
 }
+
+export default {load}

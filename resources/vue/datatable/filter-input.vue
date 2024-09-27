@@ -21,14 +21,11 @@
 
 <script>
 import {debounce as _debounce} from 'lodash'
-let $;
+import {jQuery as $} from '../../js/common';
 let select2Options = {};
 
 export default {
     name: 'DtFilter',
-    created(){
-        $ = this.$root.jQuery();
-    },
     mounted: function(){
         if(this.default)
             this.$parent.defaults[this.name] = this.input = this.default;

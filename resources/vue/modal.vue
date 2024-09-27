@@ -3,10 +3,10 @@
         <div :class="dialogClass">
             <div :class="'modal-content border-' + color">
                 <div v-if="!!$slots.header" :class="'modal-header bg-' + color">
-                  <component :is="titleTag" class="text-white m-0">
-                      <slot name="header"></slot>
-                  </component>
-                  <span class="close text-muted" data-dismiss="modal">&times;</span>
+                    <component :is="titleTag" class="text-white m-0">
+                        <slot name="header"></slot>
+                    </component>
+                    <span class="close text-muted" data-dismiss="modal">&times;</span>
                 </div>
                 <div :class="bodyClass">
                     <slot></slot>
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-let $;
+import {jQuery as $} from '../js/common';
 
 export default {
     name: "Modal",
@@ -30,10 +30,8 @@ export default {
             required: true
         },
         size: String,
-        'static': {
-            type: Boolean,
-            default: false
-        },
+        'static': Boolean,
+        centered: Boolean,
         color: {
             type: String,
             default: 'grey-10'
@@ -42,10 +40,9 @@ export default {
             type: String,
             default: 'h3'
         },
-        noPadding: {
-            type: Boolean,
-            default: false
-        },
+        noPadding: Boolean,
+        scrollable: Boolean,
+        onClose: Function,
         zIndex: Number
     },
     computed: {
@@ -53,6 +50,10 @@ export default {
             var theClass = 'modal-dialog';
             if(this.size)
                 theClass += ' modal-' + this.size;
+            if(this.centered)
+                theClass += ' modal-dialog-centered';
+            if(this.scrollable)
+                theClass += ' modal-dialog-scrollable';
             return theClass;
         },
         bodyClass: function(){
@@ -63,21 +64,26 @@ export default {
         }
     },
     methods: {
-        show: function(reset){
+        show(reset){
             if(reset !== undefined)
                 reset();
             $('#' + this.id).modal('show');
+        },
+        hide(){
+            $('#' + this.id).modal('hide');
         }
     },
-    created(){
-        $ = this.$root.jQuery();
-    },
     mounted(){
+        let body = $('body');
         if(this.zIndex)
-            $('body').on('show.bs.modal', '#' + this.id, () => {
+            body.on('show.bs.modal', '#' + this.id, () => {
                 setTimeout(() => {
                     $('.modal-backdrop.show:last-of-type').css('z-index', 1050 + this.zIndex * 10 - 1);
                 }, 100);
+            });
+        if(this.onClose)
+            body.on('hidden.bs.modal', '#' + this.id, () => {
+                this.onClose();
             });
     }
 }
@@ -86,5 +92,9 @@ export default {
 <style>
 .modal .close{
     cursor: pointer;
+}
+
+.modal-xxl{
+    max-width: 85%;
 }
 </style>

@@ -1,33 +1,16 @@
-import {createApp, defineAsyncComponent} from "vue";
+import {createApp} from "vue";
 import 'bootstrap';
-import jQuery from 'jquery';
+import Datatable from "../vue/datatable/index.js";
+import common from "./common.js";
 
-let imports = [
-    import('../vue/navbar'),
-    import('../vue/datatable')
-];
+let app = createApp({
+    name: 'LempManager',
+    methods: {
+        renderType:(type) => type
+    }
+}), components = {Card: 'card'}, bundles = [Datatable];
 
-Promise.all(imports).then(bundles => {
-    let components = {Card: defineAsyncComponent(() => import('../vue/card.vue'))};
-    for(let i in bundles)
-        components = Object.assign(components, bundles[i].default);
-    let app = createApp({
-        name: 'LempManager',
-        components,
-        methods: {
-            jQuery(){
-                return jQuery;
-            },
-            renderType:(type) => type
-        },
-        created(){
-            jQuery.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-                }
-            })
-        }
-    });
-
-    app.mount('#app');
-});
+common.load(app);
+common.loadBundles(app, bundles);
+common.loadComponents(app, components);
+app.mount('#app');

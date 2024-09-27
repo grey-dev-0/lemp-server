@@ -1,7 +1,9 @@
 import Navbar from './navbar.vue';
 import NavItem from './item.vue';
 
-export default {
-    Navbar,
-    NavItem
+function load(app){
+    app.component('Navbar', Navbar);
+    app.component('NavItem', NavItem);
 }
+
+export default {load}

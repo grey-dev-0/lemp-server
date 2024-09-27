@@ -15,7 +15,7 @@
 <script>
 import 'datatables.net-bs4';
 import 'datatables.net-bs4/css/dataTables.bootstrap4.css';
-let $;
+import {jQuery as $} from '../../js/common';
 
 export default {
     name: 'VueDatatable',
@@ -86,9 +86,6 @@ export default {
             if(this.$root.emitter !== undefined)
                 this.$root.emitter.emit('initialized', {ref: this.getRef()});
         }
-    },
-    created(){
-        $ = this.$root.jQuery();
     }
 };
 </script>
