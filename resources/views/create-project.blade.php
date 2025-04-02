@@ -57,7 +57,7 @@
                     <button class="d-none" type="submit" id="submit">Submit</button>
                 </form>
                 <template #footer>
-                    <div class="btn btn-success" @click="jQuery()('#submit').trigger('click')">Create</div>
+                    <div class="btn btn-success" @click="submit">Create</div>
                 </template>
             </card>
         </div>

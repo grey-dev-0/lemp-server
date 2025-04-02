@@ -1,5 +1,5 @@
 import {createApp} from "vue";
-import common from "./common.js";
+import common, {jQuery as $} from "./common.js";
 
 let app = createApp({
     name: 'LempManager',
@@ -16,6 +16,9 @@ let app = createApp({
         },
         remove(i){
             this.domains.splice(i, 1);
+        },
+        submit(){
+            $('#submit').trigger('click');
         }
     }
 });
