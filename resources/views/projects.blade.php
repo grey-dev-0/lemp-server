@@ -31,5 +31,8 @@
 @endsection
 
 @push('scripts')
+    <script>
+        let projectTypes = @json(App\Models\Project::$types);
+    </script>
     @vite('resources/js/projects.js')
 @endpush

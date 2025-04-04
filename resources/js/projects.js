@@ -6,7 +6,7 @@ import common from "./common.js";
 let app = createApp({
     name: 'LempManager',
     methods: {
-        renderType:(type) => type
+        renderType:(type) => projectTypes[type] || type,
     }
 }), components = {Card: 'card'}, bundles = [Datatable];
 
