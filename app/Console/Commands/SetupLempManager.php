@@ -20,36 +20,6 @@ class SetupLempManager extends Command{
     protected $description = 'Sets up the LEMP manager web app database and server configurations.';
 
     /**
-     * Adds lemp.docker domain to host system's hosts file to enable local access to the LEMP manager app.
-     *
-     * @return void
-     */
-    private function setupHosts(){
-        $serverIp = trim(`docker inspect lemp-nginx-1 | grep IPAddr | grep --color=none -oE '[0-9]+\.[0-9]+[^"]+'`);
-        $hostsFile = fopen('/etc/host.hosts', 'r');
-        $ips = [];
-        $done = false;
-        while(($ip = fgets($hostsFile)) !== false){
-            $ip = trim($ip);
-            if(str_contains($ip, 'lemp.docker'))
-                return;
-            if(!str_contains($ip, $serverIp)){
-                $ips[] = $ip;
-                continue;
-            }
-            $hosts = preg_split('# +#u', $ip);
-            $ip = array_shift($hosts);
-            $hosts[] = 'lemp.docker';
-            $ips[] = implode(' ', array_merge($ip, $hosts));
-            $done = true;
-        }
-        fclose($hostsFile);
-        if(!$done)
-            $ips[] = "$serverIp lemp.docker";
-        file_put_contents('/etc/host.hosts', implode(PHP_EOL, $ips));
-    }
-
-    /**
      * Execute the console command.
      */
     public function handle(){
@@ -60,7 +30,7 @@ class SetupLempManager extends Command{
         $this->comment('Server configurations setup complete.');
 
         $this->info('Setting up domain configuration..');
-        $this->setupHosts();
+        add_host('lemp.docker');
         $this->comment('Domain configuration setup complete.');
 
         $this->info('Setting up database..');
