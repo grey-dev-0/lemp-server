@@ -1,12 +1,12 @@
-import { defineConfig } from 'vite';
+import {defineConfig} from 'vite';
+import {globSync} from 'glob';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.scss', 'resources/js/home.js', 'resources/js/projects.js',
-                'resources/js/create-project.js'],
+            input: globSync(['resources/js/*.js', 'resources/css/*.scss']).map(file => file.replace(/[\\\/]+/g, '/')),
             refresh: true,
         }),
         vue({

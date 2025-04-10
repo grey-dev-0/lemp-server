@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ProvisionProject;
+use App\Models\Domain;
 use App\Models\Project;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -24,6 +25,7 @@ class Controller extends BaseController{
     }
 
     public function postDomains(){
-        # TODO: Domains listing.
+        return \DataTables::of(Domain::query())
+            ->addColumn('actions', fn($domain) => view('actions.domains', compact('domain'))->render())->make();
     }
 }
