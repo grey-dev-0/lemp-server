@@ -23,8 +23,12 @@ class ProvisionProject implements ShouldQueue{
     public function handle(): void{
         $password = env('DB_PASSWORD');
         $dbCheck = trim(`docker exec lemp-mariadb-1 mysql -u root -p$password -N -e 'show databases;' | grep --color=none {$this->project->database}`);
-        if($dbCheck != $this->project->database)
-            `docker exec lemp-mariadb-1 mysql -u root -p$password -e 'create database {$this->project->database};'`;
+        \Log::info("Provisioning project located in '{$this->project->path}'..");
+        if($dbCheck != $this->project->database){
+            \Log::info("Creating database {$this->project->database}");
+            \Log::comment(`docker exec lemp-mariadb-1 mysql -u root -p$password -e 'create database {$this->project->database};'`);
+        } else
+            \Log::info("Database {$this->project->database} already exists.");
         $this->project->update(['provisioned_at' => now()]);
         $this->project->domains->each(function($domain){
             dispatch(new ProvisionDomain($domain));
