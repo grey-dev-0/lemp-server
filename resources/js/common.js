@@ -7,7 +7,7 @@ jQuery.ajaxSettings.headers = {'X-CSRF-TOKEN': jQuery('[name="csrf-token"]').att
 
 function load(app){
     navbar.load(app);
-    loadComponents(app, {Card: 'card'});
+    loadComponents(app, {Card: 'card', Log: 'log'});
 }
 
 function loadBundles(app, bundles){

@@ -15,6 +15,8 @@
     <div class="container-fluid mt-3">
         @yield('content')
     </div>
+
+    <log ref="logger"></log>
 </div>
 <div id="loader" class="text-muted">..Loading..</div>
 

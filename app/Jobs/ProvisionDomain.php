@@ -25,7 +25,7 @@ class ProvisionDomain implements ShouldQueue{
      */
     private function setServerConfig(){
         \Log::info("Setting server configuration file");
-        if(trim(`docker exec -w /etc/nginx/vhosts lemp-nginx-1 grep -u {$this->domain->name} * | wc -l`) == 0){
+        if(trim(`docker exec -w /etc/nginx/vhosts lemp-nginx-1 grep -u {$this->domain->name} * | wc -l`) > 0){
             \Log::warning("{$this->domain->name} has been already configured!");
             return false;
         }
@@ -38,7 +38,7 @@ class ProvisionDomain implements ShouldQueue{
         ])->render();
         file_put_contents($nginxFile, $nginxConfig);
         \Log::info(`docker cp $nginxFile lemp-nginx-1:/etc/nginx/vhosts/`);
-        \Log::comment("Server configuration file $nginxFile has been updated.");
+        \Log::info("Server configuration file $nginxFile has been updated.");
         return true;
     }
 
@@ -50,7 +50,7 @@ class ProvisionDomain implements ShouldQueue{
     private function setupSslSupport(){
         \Log::info("Setting up SSL support for {$this->domain->name}..");
         \Log::info(`mkcert {$this->domain->name} && docker cp {$this->domain->name}.pem lemp-nginx-1:/etc/nginx/ssl/ && docker cp {$this->domain->name}-key.pem lemp-nginx-1:/etc/nginx/ssl/ && rm -f {$this->domain->name}*.pem`);
-        \Log::comment("Local SSL certificates have been generated and copied for {$this->domain->name}.");
+        \Log::info("Local SSL certificates have been generated and copied for {$this->domain->name}.");
         return true;
     }
 
@@ -62,7 +62,7 @@ class ProvisionDomain implements ShouldQueue{
     private function setupHostsFile(){
         \Log::info("Adding {$this->domain->name} to local hosts file..");
         add_host($this->domain->name);
-        \Log::comment('Local hosts file has been updated.');
+        \Log::info('Local hosts file has been updated.');
         return true;
     }
 
@@ -73,6 +73,6 @@ class ProvisionDomain implements ShouldQueue{
      */
     public function handle(): void{
         $this->setServerConfig() && $this->domain->https && $this->setupSslSupport() && $this->setupHostsFile()
-            && \Log::comment(`docker exec lemp-nginx-1 nginx -s reload`) && $this->domain->update(['provisioned_at' => now()]);
+            && \Log::info(`docker exec lemp-nginx-1 nginx -s reload`) && $this->domain->update(['provisioned_at' => now()]);
     }
 }
