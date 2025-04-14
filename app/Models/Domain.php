@@ -11,7 +11,11 @@ class Domain extends Model{
     /**
      * @inheritdoc
      */
-    protected $casts = ['provisioned_at' => 'datetime:Y-m-d h:i:s A'];
+    protected $casts = [
+        'provisioned_at' => 'datetime:d/m/Y h:i:s A',
+        'created_at'     => 'datetime:d/m/Y h:i:s A',
+        'updated_at'     => 'datetime:d/m/Y h:i:s A'
+    ];
 
     /**
      * @inheritdoc

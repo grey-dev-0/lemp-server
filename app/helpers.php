@@ -21,9 +21,8 @@ if(!function_exists('add_host')){
                 continue;
             }
             $hosts = preg_split('# +#u', $ip);
-            $ip = array_shift($hosts);
             $hosts[] = $host;
-            $ips[] = implode(' ', array_merge($ip, $hosts));
+            $ips[] = implode(' ', $hosts);
             $done = true;
         }
         fclose($hostsFile);
