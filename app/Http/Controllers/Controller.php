@@ -28,4 +28,8 @@ class Controller extends BaseController{
         return \DataTables::of(Domain::query())
             ->addColumn('actions', fn($domain) => view('actions.domains', compact('domain'))->render())->make();
     }
+
+    public function getCreateDomain(){
+        return view('create-domain', ['title' => 'Create Domain', 'projects' => Project::pluck('path', 'id')]);
+    }
 }

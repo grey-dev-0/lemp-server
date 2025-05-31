@@ -21,5 +21,5 @@ Route::view('projects/add', 'create-project', ['title' => 'Create Project'])->na
 Route::post('projects/add', [Controller::class, 'postProject']);
 Route::view('domains', 'domains', ['title' => 'Domains'])->name('domains');
 Route::post('domains', [Controller::class, 'postDomains'])->name('domains.ajax');
-Route::view('domains/add', 'create-domain', ['title' => 'Create Domain'])->name('domains.add');
+Route::get('domains/add', [Controller::class, 'getCreateDomain'])->name('domains.add');
 Route::post('domains/add', [Controller::class, 'postDomain']);

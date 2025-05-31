@@ -12,46 +12,20 @@
                     {{csrf_field()}}
 
                     <div class="form-group row">
-                        <label for="path" class="form-label col-lg-2 col-md-4 col-6">Path</label>
-                        <div class="col-lg-10 col-md-8 col-6">
-                            <input type="text" class="form-control" id="path" name="path" placeholder="Domain path relative to {{env('DOMAINS_ROOT')}}" required>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="type" class="form-label col-lg-2 col-md-4 col-6">Type</label>
+                        <label for="type" class="form-label col-lg-2 col-md-4 col-6">Project</label>
                         <div class="col-lg-10 col-md-8 col-6">
                             <select name="type" id="type" class="form-control" required>
-                                <option value="">-- Type --</option>
-                                @foreach(\App\Models\Domain::$types as $type => $label)
-                                    <option value="{{$type}}">{{$label}}</option>
+                                <option value="">-- Project --</option>
+                                @foreach($projects as $id => $path)
+                                    <option value="{{$id}}">{{$path}}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label for="database" class="form-label col-lg-2 col-md-4 col-6">Database</label>
-                        <div class="col-lg-10 col-md-8 col-6">
-                            <input type="text" class="form-control" id="database" name="database" placeholder="Domain database name" required>
-                        </div>
-                    </div>
                     <div class="row">
-                        <label class="form-label col-lg-2 col-md-4 col-6">Domains</label>
+                        <label for="database" class="form-label col-lg-2 col-md-4 col-6">Webserver Configuration <small class="badge badge-secondary">nginx</small></label>
                         <div class="col-lg-10 col-md-8 col-6">
-                            <div v-for="(domain, i) in domains" :key="i" :class="'input-group mb-3' + (domains.length - 1 == i? '' : ' form-group')">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="checkbox" :id="'https-' + i" v-model="domain.https" :name="'domains['+i+'][https]'" value="1">
-                                            <label :for="'https-' + i" class="form-check-label">https</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <input type="text" class="form-control" :id="'domains-' + i" :name="'domains['+i+'][name]'" placeholder="Domain domain e.g. mydomain.docker" v-model="domain.name" required>
-                                <div class="input-group-append">
-                                    <div v-if="domains.length > 1" class="btn btn-outline-danger" @click="remove(i)">Remove</div>
-                                    <div v-if="domains.length - 1 == i" class="btn btn-outline-success" @click="add">Add</div>
-                                </div>
-                            </div>
+                            <code-editor name="config" value="{!! old('config') !!}"></code-editor>
                         </div>
                     </div>
                     <button class="d-none" type="submit" id="submit">Submit</button>
