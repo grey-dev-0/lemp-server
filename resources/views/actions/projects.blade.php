@@ -1,0 +1,1 @@
+<a href="{{route('domains.add', ['project' => $project->id])}}" class="btn btn-sm btn-outline-indigo-2">Add Domain</a>

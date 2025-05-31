@@ -11,6 +11,18 @@ let app = createApp({
         };
     },
     methods: {
+        generateStub(){
+            let editor = this.$refs.configEditor;
+            let proceed = editor.code.length == 0 || confirm('Currently written configuration will be overwritten with the stub, continue?');
+            if(!proceed)
+                return;
+            let request = {}, domain = $('#domain').val();
+            if(domain.length)
+                request = {domain};
+            $.post('/stub/' + $('#project').val(), request, response => {
+                editor.setContent(response);
+            });
+        },
         submit(){
             $('#submit').trigger('click');
         }

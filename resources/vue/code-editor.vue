@@ -1,6 +1,6 @@
 <template>
     <div ref="editorContainer" class="monaco-editor-container"></div>
-    <input type="hidden" :name="name" :value="code">
+    <textarea class="d-none" :name="name" :value="code"></textarea>
 </template>
 
 <script setup lang="ts">
@@ -9,15 +9,12 @@ import * as monaco from 'monaco-editor';
 import type { editor } from 'monaco-editor';
 import {registerNginxLanguage} from "./nginx";
 import monokai from 'monaco-themes/themes/Monokai.json';
-
-// Import workers using Vite's worker syntax
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 import CssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
 import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
 import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
 
-// Configure Monaco workers
 self.MonacoEnvironment = {
     getWorker(_, label) {
         if (label === 'json') {
@@ -79,6 +76,13 @@ onMounted(() => {
 onBeforeUnmount(() => {
     if (editorInstance.value) {
         editorInstance.value.dispose();
+    }
+});
+
+defineExpose({
+    code,
+    setContent(value: string){
+        code.value = value;
     }
 });
 </script>

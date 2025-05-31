@@ -24,6 +24,7 @@ server {
     root /home/projects/{{$docRoot}};
     index index.html;
 @endswitch
+
     location / {
         try_files $uri $uri/ /index.php$is_args$args;
     }

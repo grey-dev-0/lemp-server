@@ -14,18 +14,29 @@
                     <div class="form-group row">
                         <label for="type" class="form-label col-lg-2 col-md-4 col-6">Project</label>
                         <div class="col-lg-10 col-md-8 col-6">
-                            <select name="type" id="type" class="form-control" required>
-                                <option value="">-- Project --</option>
-                                @foreach($projects as $id => $path)
-                                    <option value="{{$id}}">{{$path}}</option>
-                                @endforeach
-                            </select>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="btn btn-outline-secondary" @click="generateStub">Generate Stub</div>
+                                </div>
+                                <select name="project" id="project" class="form-control" required>
+                                    <option value="">-- Project --</option>
+                                    @foreach($projects as $id => $path)
+                                        <option value="{{$id}}" @selected($project?->id == $id)>{{$path}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="domain" class="form-label col-lg-2 col-md-4 col-6">Primary Domain</label>
+                        <div class="col-lg-10 col-md-8 col-6">
+                            <input type="text" name="domain" id="domain" class="form-control" required placeholder="Primary Domain e.g. abc.docker">
                         </div>
                     </div>
                     <div class="row">
                         <label for="database" class="form-label col-lg-2 col-md-4 col-6">Webserver Configuration <small class="badge badge-secondary">nginx</small></label>
                         <div class="col-lg-10 col-md-8 col-6">
-                            <code-editor name="config" value="{!! old('config') !!}"></code-editor>
+                            <code-editor ref="configEditor" name="config" value="{!! old('config') !!}"></code-editor>
                         </div>
                     </div>
                     <button class="d-none" type="submit" id="submit">Submit</button>

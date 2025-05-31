@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col">
             @if(session()->has('success'))
-                <x-alert https="success">
+                <x-alert type="success">
                     The domain has been created successfully and, its provision has been initialized.
                 </x-alert>
             @endif
