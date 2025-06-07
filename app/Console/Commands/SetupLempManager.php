@@ -31,6 +31,7 @@ class SetupLempManager extends Command{
 
         $this->info('Setting up domain configuration..');
         add_host('lemp.docker');
+        add_host('phpmyadmin.docker', 'phpmyadmin');
         $this->comment('Domain configuration setup complete.');
 
         $this->info('Setting up database..');

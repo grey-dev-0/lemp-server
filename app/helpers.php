@@ -5,10 +5,11 @@ if(!function_exists('add_host')){
      * Adds the provided custom domain to host system's hosts file to enable local access to it.
      *
      * @param string $host The domain to add to host system's hosts file.
+     * @param string $service The service that the domain should point to.
      * @return void
      */
-    function add_host($host){
-        $serverIp = trim(`docker inspect lemp-nginx-1 | grep IPAddr | grep --color=none -oE '[0-9]+\.[0-9]+[^"]+'`);
+    function add_host(string $host, string $service = 'nginx'): void{
+        $serverIp = trim(`docker inspect lemp-{$service}-1 | grep IPAddr | grep --color=none -oE '[0-9]+\.[0-9]+[^"]+'`);
         $hostsFile = fopen('/etc/host.hosts', 'r');
         $ips = [];
         $done = false;

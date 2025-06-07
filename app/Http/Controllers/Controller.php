@@ -44,7 +44,7 @@ class Controller extends BaseController{
         return response(view('stubs.nginx', [
             'serverName' => request('domain', '[WRITE YOUR DOMAIN HERE e.g. app.docker]'),
             'type' => $project->type?? Project::DYNAMIC_PHP,
-            'docRoot' => '[WRITE YOUR APP DIRECTORY HERE e.g. app]',
+            'docRoot' => $project->path?? '[WRITE YOUR APP DIRECTORY HERE e.g. app]',
             'tls' => true
         ])->render(), 200, ['Content-Type' => 'text/plain']);
     }
