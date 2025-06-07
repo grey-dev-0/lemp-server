@@ -27,7 +27,8 @@ class Controller extends BaseController{
 
     public function postDomains(){
         return \DataTables::of(Domain::query())
-            ->addColumn('actions', fn($domain) => view('actions.domains', compact('domain'))->render())->make();
+            ->addColumn('actions', fn($domain) => view('actions.domains', compact('domain'))->render())
+            ->rawColumns(['actions'])->make();
     }
 
     public function getCreateDomain(?Project $project = null){

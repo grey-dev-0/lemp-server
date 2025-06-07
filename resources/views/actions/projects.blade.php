@@ -1,1 +1,3 @@
-<a href="{{route('domains.add', ['project' => $project->id])}}" class="btn btn-sm btn-outline-indigo-2">Add Domain</a>
+<a href="{{route('domains.add', ['project' => $project->id])}}" class="btn btn-sm btn-outline-indigo-2 mr-2" title="Add Domain"><font-awesome-icon icon="fas fa-folder-plus" size="lg"></font-awesome-icon></a>
+<a href="{{route('projects.edit', ['project' => $project->id])}}" class="btn btn-sm btn-outline-brown-6 mr-2" title="Edit Project"><font-awesome-icon icon="fas fa-pen-to-square" size="lg"></font-awesome-icon></a>
+<div class="btn btn-sm btn-outline-danger delete-project" title="Delete project {{$project->path}}"><font-awesome-icon icon="far fa-trash-alt" size="lg"></font-awesome-icon></div>

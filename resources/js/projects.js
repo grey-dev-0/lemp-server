@@ -6,11 +6,13 @@ import common from "./common.js";
 let app = createApp({
     name: 'LempManager',
     methods: {
-        renderType:(type) => projectTypes[type] || type,
+        renderType: type => projectTypes[type] || type,
+        renderActions: function(actions){
+            return common.renderVueTemplate(actions, this.$);
+        }
     }
-}), components = {Card: 'card'}, bundles = [Datatable];
+}), bundles = [Datatable];
 
 common.load(app);
 common.loadBundles(app, bundles);
-common.loadComponents(app, components);
 app.mount('#app');

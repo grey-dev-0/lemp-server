@@ -7,10 +7,12 @@ let app = createApp({
     name: 'LempManager',
     methods: {
         renderHttps: (https) => https? 'Yes' : 'No',
+        renderActions: function(actions){
+            return common.renderVueTemplate(actions, this.$);
+        }
     }
-}), components = {Card: 'card'}, bundles = [Datatable];
+}), bundles = [Datatable];
 
 common.load(app);
 common.loadBundles(app, bundles);
-common.loadComponents(app, components);
 app.mount('#app');
