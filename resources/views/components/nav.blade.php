@@ -3,6 +3,6 @@
     <nav-item url="{{route('projects')}}" @if(Route::is(['projects', 'projects.*'])) active @endif>Projects</nav-item>
     <nav-item url="{{route('domains')}}" @if(Route::is(['domains', 'domains.*'])) active @endif>Domains</nav-item>
     <template #right>
-        <nav-item url="#" @click.prevent="$refs.logger.toggle()">Console</nav-item>
+        <nav-item url="#" @click.prevent="$refs.logger.toggle()"><font-awesome-icon class="mr-2" icon="fas fa-terminal"></font-awesome-icon>Logs</nav-item>
     </template>
 </navbar>

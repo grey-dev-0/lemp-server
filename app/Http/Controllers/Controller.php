@@ -38,7 +38,16 @@ class Controller extends BaseController{
 
     public function postDomain(\App\Http\Requests\DomainRequest $request, ?Domain $domain = null){
         $request->handle();
-        return redirect()->route('domains')->with(['success' => true]);
+        return empty($domain)?
+            redirect()->route('domains')->with(['success' => true]) :
+            redirect()->back()->with(['success' => true]);
+    }
+
+    public function getEditDomain(\App\Models\Domain $domain){
+        $config = file_exists($file = storage_path('app/'.$domain->name.'.conf'))?
+            file_get_contents($file) : '';
+        $projects = \App\Models\Project::pluck('path', 'id');
+        return view('edit-domain', ['title' => "Edit Domain of Project ({$domain->project->path})"] + compact('domain', 'config', 'projects'));
     }
 
     public function postStub(?Project $project = null){

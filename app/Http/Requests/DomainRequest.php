@@ -25,6 +25,16 @@ class DomainRequest extends FormRequest{
         ];
     }
 
+    public $attributes = [
+        'domain' => 'Primary Domain'
+    ];
+
+    public function messages(){
+        return [
+            'domain.ends_with' => 'The field :attribute must end with .docker'
+        ];
+    }
+
     /**
      * Handles create / update domain request.
      *
