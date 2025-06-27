@@ -23,13 +23,12 @@ function loadComponents(app, components){
         app.component(name, defineAsyncComponent(() => import(`../vue/${components[name]}.vue`)));
 }
 
-function renderVueTemplate(template, app) {
-    const div = document.createElement('div');
-    const compiled = compile(template);
-    const node = h({render: compiled});
+function renderVueTemplate(template, app, options = {}) {
+    const compiled = compile(template.innerHTML);
+    const node = h({render: compiled, ...options});
     node.appContext = app.appContext;
-    render(node, div);
-    return div.innerHTML;
+    render(node, template.parentNode);
+    template.remove();
 }
 
 export {jQuery};
