@@ -7,7 +7,14 @@ let app = createApp({
     name: 'LempManager',
     data() {
         return {
-            services: [],
+            services: [
+                { name: 'dns', status: 'exited', containerName: 'lemp-dns-1' },
+                { name: 'dns worker', status: 'exited', containerName: 'lemp-dns-1 (worker)' },
+                { name: 'mariadb', status: 'exited', containerName: 'lemp-mariadb-1' },
+                { name: 'nginx', status: 'exited', containerName: 'lemp-nginx-1' },
+                { name: 'php', status: 'exited', containerName: 'lemp-php-1' },
+                { name: 'phpmyadmin', status: 'exited', containerName: 'lemp-phpmyadmin-1' }
+            ],
             isLoading: false,
             error: null,
             timestamp: null
@@ -55,7 +62,6 @@ let app = createApp({
         }
     },
     mounted() {
-        // Give websocket a moment to initialize if it hasn't yet
         setTimeout(() => {
             if (websocket && websocket.readyState === WebSocket.OPEN) {
                 this.fetchStackStatus();

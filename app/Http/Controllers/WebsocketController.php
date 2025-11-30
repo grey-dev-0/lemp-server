@@ -96,6 +96,18 @@ class WebsocketController extends Controller implements MessageComponentInterfac
                     'containerName' => "lemp-{$serviceName}-1",
                 ];
             }
+            
+            $dnsWorkerStatus = 'exited';
+            $psOutput = `docker exec lemp-dns-1 ps aux 2>/dev/null | grep 'queue:work' | grep -v grep`;
+            if (!empty(trim($psOutput))) {
+                $dnsWorkerStatus = 'running';
+            }
+            
+            $services[] = [
+                'name' => 'dns worker',
+                'status' => $dnsWorkerStatus,
+                'containerName' => 'lemp-dns-1 (worker)',
+            ];
 
             usort($services, fn($a, $b) => strcmp($a['name'], $b['name']));
             
