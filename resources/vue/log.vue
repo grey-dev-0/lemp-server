@@ -14,6 +14,8 @@
 <script>
 let ws, ping;
 
+export { ws as websocket };
+
 export default {
     name: 'Log',
     data: () => ({

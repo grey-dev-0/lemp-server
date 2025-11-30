@@ -3,11 +3,41 @@
 @push('styles')
     @vite('resources/css/app.scss')
 @endpush
-
 @section('content')
-    <div class="row">
-        <div class="col">
-            WIP
+    <div id="app" class="row">
+        <div class="col col-md-6">
+            <card title="Stack Status" color="blue-grey-2" no-padding>
+                <template #toolbar>
+                    <button @@click="fetchStackStatus" class="btn btn-sm btn-primary" :disabled="isLoading">
+                        <span v-if="!isLoading">Refresh Status</span>
+                        <span v-else>
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </span>
+                    </button>
+                </template>
+                <div v-if="error" class="alert alert-danger m-3" role="alert">
+                    @{{ error }}
+                </div>
+                <list v-else :collapse="false">
+                    <template v-if="services.length > 0">
+                        <list-item v-for="service in services" :key="service.name">
+                            <div class="d-flex justify-content-between align-items-center w-100">
+                                <span>@{{ service.name }}</span>
+                                <span :class="getStatusBadgeClass(service.status)" class="badge text-white">
+                                @{{ service.status }}
+                            </span>
+                            </div>
+                        </list-item>
+                    </template>
+                    <list-item v-else>
+                        <div class="text-center text-danger">Docker LEMP stack isn't running!.</div>
+                    </list-item>
+                </list>
+                <div v-if="!error && timestamp" class="text-muted px-3 py-2 text-right">
+                    <small>Last updated: @{{ formatTimestamp(timestamp) }}</small>
+                </div>
+            </card>
         </div>
     </div>
 @endsection

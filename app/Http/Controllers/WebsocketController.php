@@ -69,5 +69,41 @@ class WebsocketController extends Controller implements MessageComponentInterfac
                     $conn->send(fgets($resource));
             });
         }
+        if($msg['action'] == 'STACK_STATUS'){
+            $definedServices = ['dns', 'php', 'mariadb', 'nginx', 'phpmyadmin'];
+            $serviceStatus = array_fill_keys($definedServices, 'exited');
+            
+            $output = `docker ps -a --format json --filter label=com.docker.compose.project=lemp`;
+            $lines = array_filter(explode("\n", trim($output)));
+            
+            foreach ($lines as $line) {
+                $container = json_decode($line, true);
+                if (!$container) continue;
+                
+                $name = $container['Names'] ?? '';
+                $serviceName = preg_replace(['/^lemp[-_]/', '/-[0-9]+$/'], '', $name);
+                
+                if (in_array($serviceName, $definedServices)) {
+                    $serviceStatus[$serviceName] = $container['State'] ?? 'unknown';
+                }
+            }
+            
+            $services = [];
+            foreach ($serviceStatus as $serviceName => $status) {
+                $services[] = [
+                    'name' => $serviceName,
+                    'status' => $status,
+                    'containerName' => "lemp-{$serviceName}-1",
+                ];
+            }
+
+            usort($services, fn($a, $b) => strcmp($a['name'], $b['name']));
+            
+            $conn->send(json_encode([
+                'type' => 'STACK_STATUS',
+                'services' => $services,
+                'timestamp' => now()->toIso8601String()
+            ]));
+        }
     }
 }
