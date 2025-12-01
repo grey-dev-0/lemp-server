@@ -1,6 +1,6 @@
 import {createApp} from "vue";
 import common from "./common.js";
-import { websocket } from "../vue/log.vue";
+import { websocket, wsEvents } from "../vue/log.vue";
 import List from "../vue/list/index.js";
 
 let app = createApp({
@@ -55,29 +55,32 @@ let app = createApp({
     },
     mounted() {
         setTimeout(() => {
-            if (websocket && websocket.readyState === WebSocket.OPEN) {
-                websocket.addEventListener('message', (e) => {
+            if (websocket) {
+                wsEvents.on('message', (data) => {
                     try {
-                        const data = JSON.parse(e.data);
-                        if (data.type === 'STACK_STATUS') {
-                            this.services = data.services || [];
-                            this.timestamp = data.timestamp;
+                        const parsed = JSON.parse(data);
+                        if (parsed.type === 'STACK_STATUS') {
+                            this.services = parsed.services || [];
+                            this.timestamp = parsed.timestamp;
                             this.isLoading = false;
-                        } else if (data.type === 'SERVICE_RESTARTED') {
-                            const service = this.services.find(s => s.name === data.service);
+                        } else if (parsed.type === 'SERVICE_RESTARTED') {
+                            const service = this.services.find(s => s.name === parsed.service);
                             if (service) service.restarting = false;
-                            if (data.success) {
+                            if (parsed.success) {
                                 this.error = null;
                                 setTimeout(() => this.fetchStackStatus(), 500);
                             } else {
-                                this.error = data.error || 'Failed to restart service';
+                                this.error = parsed.error || 'Failed to restart service';
                             }
                         }
-                    } catch (_) {
-                        // ignore
-                    }
+                    } catch (_) {}
                 });
-                this.fetchStackStatus();
+                wsEvents.on('open', () => {
+                    this.fetchStackStatus();
+                });
+                if (websocket.readyState === WebSocket.OPEN) {
+                    this.fetchStackStatus();
+                }
             }
         }, 100);
     }

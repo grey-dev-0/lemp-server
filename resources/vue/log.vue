@@ -12,9 +12,13 @@
 </template>
 
 <script>
+import mitt from 'mitt';
+
 let ws, ping;
+const wsEvents = mitt();
 
 export { ws as websocket };
+export { wsEvents };
 
 export default {
     name: 'Log',
@@ -30,12 +34,14 @@ export default {
                     this.lines.push(e.data);
                 if(this.lines.length > 256)
                     this.lines.splice(0, this.lines.length - 256);
+                wsEvents.emit('message', e.data);
             };
             ws.onopen = () => {
                 ws.send(JSON.stringify({action: 'LOG'}));
                 ping = setInterval(() => {
                     ws.send(JSON.stringify({action: 'PING'}));
                 }, 15000);
+                wsEvents.emit('open');
             };
             ws.onclose = () => {
                 clearInterval(ping);
