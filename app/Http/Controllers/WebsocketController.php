@@ -117,5 +117,26 @@ class WebsocketController extends Controller implements MessageComponentInterfac
                 'timestamp' => now()->toIso8601String()
             ]));
         }
+        if($msg['action'] == 'RESTART_SERVICE'){
+            $service = $msg['service'] ?? '';
+            $ok = true; $error = null;
+            try{
+                if($service === 'dns worker'){
+                    $service = 'dns';
+                }
+                $container = "lemp-{$service}-1";
+                $exitCode = null;
+                system("docker restart $container >/dev/null 2>&1 || docker start $container >/dev/null 2>&1", $exitCode);
+                if($exitCode !== 0) $ok = false;
+            }catch(\Throwable $e){
+                $ok = false; $error = $e->getMessage();
+            }
+            $conn->send(json_encode([
+                'type' => 'SERVICE_RESTARTED',
+                'service' => $msg['service'] ?? '',
+                'success' => $ok,
+                'error' => $error,
+            ]));
+        }
     }
 }

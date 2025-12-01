@@ -23,9 +23,19 @@
                     <list-item v-for="service in services" :key="service.name">
                         <div class="d-flex justify-content-between align-items-center w-100">
                             <span>@{{ service.name }}</span>
-                            <span :class="getStatusBadgeClass(service.status)" class="badge text-white">
-                                @{{ service.status }}
-                            </span>
+                            <div class="d-flex align-items-center gap-2">
+                                <div @@click="restartService(service.name)" :class="service.status === 'exited' ? 'btn-success' : 'btn-info'" class="btn btn-sm d-inline-block mr-2 text-white" :disabled="service.restarting" :title="service.status === 'exited' ? 'Start service' : 'Restart service'">
+                                    <span v-if="!service.restarting">
+                                        <font-awesome-icon :icon="service.status === 'exited' ? 'fas fa-play' : 'fas fa-rotate-right'"></font-awesome-icon>
+                                    </span>
+                                    <span v-else>
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    </span>
+                                </div>
+                                <span :class="getStatusBadgeClass(service.status)" class="badge text-white">
+                                    @{{ service.status }}
+                                </span>
+                            </div>
                         </div>
                     </list-item>
                 </list>

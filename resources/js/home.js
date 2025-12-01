@@ -8,12 +8,12 @@ let app = createApp({
     data() {
         return {
             services: [
-                { name: 'dns', status: 'exited', containerName: 'lemp-dns-1' },
-                { name: 'dns worker', status: 'exited', containerName: 'lemp-dns-1 (worker)' },
-                { name: 'mariadb', status: 'exited', containerName: 'lemp-mariadb-1' },
-                { name: 'nginx', status: 'exited', containerName: 'lemp-nginx-1' },
-                { name: 'php', status: 'exited', containerName: 'lemp-php-1' },
-                { name: 'phpmyadmin', status: 'exited', containerName: 'lemp-phpmyadmin-1' }
+                { name: 'dns', status: 'exited', containerName: 'lemp-dns-1', restarting: false },
+                { name: 'dns worker', status: 'exited', containerName: 'lemp-dns-1 (worker)', restarting: false },
+                { name: 'mariadb', status: 'exited', containerName: 'lemp-mariadb-1', restarting: false },
+                { name: 'nginx', status: 'exited', containerName: 'lemp-nginx-1', restarting: false },
+                { name: 'php', status: 'exited', containerName: 'lemp-php-1', restarting: false },
+                { name: 'phpmyadmin', status: 'exited', containerName: 'lemp-phpmyadmin-1', restarting: false }
             ],
             isLoading: false,
             error: null,
@@ -24,29 +24,21 @@ let app = createApp({
         fetchStackStatus() {
             this.isLoading = true;
             this.error = null;
-            
             if (!websocket || websocket.readyState !== WebSocket.OPEN) {
                 this.error = 'WebSocket connection not ready';
                 this.isLoading = false;
                 return;
             }
-            
-            const handler = (e) => {
-                try {
-                    const data = JSON.parse(e.data);
-                    if (data.type === 'STACK_STATUS') {
-                        websocket.removeEventListener('message', handler);
-                        this.services = data.services || [];
-                        this.timestamp = data.timestamp;
-                        this.isLoading = false;
-                    }
-                } catch (err) {
-                    // Ignore parsing errors for other messages
-                }
-            };
-            
-            websocket.addEventListener('message', handler);
             websocket.send(JSON.stringify({action: 'STACK_STATUS'}));
+        },
+        restartService(serviceName) {
+            if (!websocket || websocket.readyState !== WebSocket.OPEN) {
+                this.error = 'WebSocket connection not ready';
+                return;
+            }
+            const service = this.services.find(s => s.name === serviceName);
+            if (service) service.restarting = true;
+            websocket.send(JSON.stringify({action: 'RESTART_SERVICE', service: serviceName}));
         },
         getStatusBadgeClass(status) {
             const statusMap = {
@@ -64,6 +56,27 @@ let app = createApp({
     mounted() {
         setTimeout(() => {
             if (websocket && websocket.readyState === WebSocket.OPEN) {
+                websocket.addEventListener('message', (e) => {
+                    try {
+                        const data = JSON.parse(e.data);
+                        if (data.type === 'STACK_STATUS') {
+                            this.services = data.services || [];
+                            this.timestamp = data.timestamp;
+                            this.isLoading = false;
+                        } else if (data.type === 'SERVICE_RESTARTED') {
+                            const service = this.services.find(s => s.name === data.service);
+                            if (service) service.restarting = false;
+                            if (data.success) {
+                                this.error = null;
+                                setTimeout(() => this.fetchStackStatus(), 500);
+                            } else {
+                                this.error = data.error || 'Failed to restart service';
+                            }
+                        }
+                    } catch (_) {
+                        // ignore
+                    }
+                });
                 this.fetchStackStatus();
             }
         }, 100);

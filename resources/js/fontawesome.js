@@ -5,7 +5,9 @@ import {
     faFolderPlus,
     faPenToSquare,
     faArrowsRotate,
-    faTerminal
+    faTerminal,
+    faPlay,
+    faRotateRight
 } from '@fortawesome/free-solid-svg-icons';
 import {faTrashAlt} from '@fortawesome/free-regular-svg-icons';
 
@@ -15,7 +17,9 @@ library.add(
     faPenToSquare,
     faTrashAlt,
     faArrowsRotate,
-    faTerminal
+    faTerminal,
+    faPlay,
+    faRotateRight
 );
 
 function load(app){
