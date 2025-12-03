@@ -25,20 +25,16 @@ class ProvisionDomain implements ShouldQueue{
      */
     private function setServerConfig(){
         \Log::info("Setting server configuration file");
-        if(trim(`docker exec -w /etc/nginx/vhosts lemp-nginx-1 bash -c 'grep -u {$this->domain->name} * | wc -l'`) > 0)
-            \Log::warning("{$this->domain->name} has been already configured, please edit the config file if changes are required.");
-        else{
-            $nginxFile = storage_path("app/{$this->domain->name}.conf");
-            $nginxConfig = empty($this->config)? view('stubs.nginx', [
-                'serverName' => $this->domain->name,
-                'type' => (int)$this->domain->project->type,
-                'docRoot' => $this->domain->project->path,
-                'tls' => (boolean)$this->domain->https
-            ])->render() : $this->config;
-            file_put_contents($nginxFile, $nginxConfig);
-            \Log::info(`docker cp $nginxFile lemp-nginx-1:/etc/nginx/vhosts/`);
-            \Log::info("Server configuration file $nginxFile has been updated.");
-        }
+        $nginxFile = storage_path("app/{$this->domain->name}.conf");
+        $nginxConfig = empty($this->config)? view('stubs.nginx', [
+            'serverName' => $this->domain->name,
+            'type' => (int)$this->domain->project->type,
+            'docRoot' => $this->domain->project->path,
+            'tls' => (boolean)$this->domain->https
+        ])->render() : $this->config;
+        file_put_contents($nginxFile, $nginxConfig);
+        \Log::info(`docker cp $nginxFile lemp-nginx-1:/etc/nginx/vhosts/`);
+        \Log::info("Server configuration file $nginxFile has been updated.");
         return true;
     }
 

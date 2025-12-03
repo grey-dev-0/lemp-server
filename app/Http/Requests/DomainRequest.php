@@ -47,6 +47,6 @@ class DomainRequest extends FormRequest{
             $domain->update($data);
         else
             $domain = Domain::create($data);
-        \App\Jobs\ProvisionDomain::dispatch($domain);
+        \App\Jobs\ProvisionDomain::dispatch($domain, $this->config);
     }
 }

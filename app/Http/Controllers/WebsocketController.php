@@ -138,5 +138,29 @@ class WebsocketController extends Controller implements MessageComponentInterfac
                 'error' => $error,
             ]));
         }
+        if($msg['action'] == 'GET_NGINX_CONFIG'){
+            $domain = $msg['domain'] ?? '';
+            $content = '';
+            $ok = true;
+            $error = null;
+            try{
+                $output = `docker exec lemp-nginx-1 bash -c 'cat /etc/nginx/vhosts/{$domain}.conf 2>/dev/null'`;
+                $content = trim($output);
+                if(empty($content)){
+                    $ok = false;
+                    $error = "Configuration file not found for domain {$domain}";
+                }
+            }catch(\Throwable $e){
+                $ok = false;
+                $error = $e->getMessage();
+            }
+            $conn->send(json_encode([
+                'type' => 'NGINX_CONFIG',
+                'domain' => $domain,
+                'content' => $content,
+                'success' => $ok,
+                'error' => $error,
+            ]));
+        }
     }
 }
